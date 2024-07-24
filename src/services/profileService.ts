@@ -1,10 +1,27 @@
 import axiosInstance from './axiosInstance';
 
+interface ProfileResponse {
+  message: string;
+  data?: any;
+}
+
+interface ProfileData {
+  name: string;
+  email: string;
+  // add all other fields that are part of the profile data
+}
+
+interface UpdateAccountInfo {
+  email?: string;
+  password?: string;
+  recoveryEmail?: string;
+}
+
 const profileService = {
   // Create a new profile
-  createProfile: async (profileData, token) => {
+  createProfile: async (profileData: ProfileData, token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.post<ProfileResponse>(
         '/profile',
         profileData,
         {
@@ -14,15 +31,15 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
 
   // Get a profile by user ID
-  getProfile: async (userId, token) => {
+  getProfile: async (userId: string, token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.get(
+      const response = await axiosInstance.get<ProfileResponse>(
         `/profile/${userId}`,
         {
           headers: {
@@ -31,15 +48,15 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
 
   // Update a profile
-  updateProfile: async (userId, profileData, token) => {
+  updateProfile: async (userId: string, profileData: ProfileData, token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.put(
+      const response = await axiosInstance.put<ProfileResponse>(
         `/profile/${userId}`,
         profileData,
         {
@@ -49,19 +66,19 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
 
   // Upload profile image and update profile
-  uploadProfileImage: async (userId, files, token) => {
+  uploadProfileImage: async (files: File[], token: string): Promise<ProfileResponse> => {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
     try {
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.post<ProfileResponse>(
         `/profile/upload-image`,
         formData,
         {
@@ -72,15 +89,15 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
-  }, 
+  },
 
   // Update email, password, and recovery email
-  updateAccountInfo: async (updateData, token) => {
+  updateAccountInfo: async (updateData: UpdateAccountInfo, token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.put(
+      const response = await axiosInstance.put<ProfileResponse>(
         `/profile/update-account-info`,
         updateData,
         {
@@ -90,15 +107,15 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
 
   // Delete account
-  deleteAccount: async (token) => {
+  deleteAccount: async (token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.delete(
+      const response = await axiosInstance.delete<ProfileResponse>(
         '/profile/delete-account',
         {
           headers: {
@@ -107,15 +124,15 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
 
   // Disable account
-  disableAccount: async (token) => {
+  disableAccount: async (token: string): Promise<ProfileResponse> => {
     try {
-      const response = await axiosInstance.put(
+      const response = await axiosInstance.put<ProfileResponse>(
         '/profile/disable-account',
         {},
         {
@@ -125,7 +142,7 @@ const profileService = {
         }
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error.response.data;
     }
   },
