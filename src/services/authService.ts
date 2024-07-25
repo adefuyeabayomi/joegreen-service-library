@@ -1,9 +1,10 @@
 import axiosInstance from "./axiosInstance";
 
 interface AuthResponse {
-  message: string;
+  message?: string;
   data?: any;
   token?: string;
+  isValid?: boolean
 }
 
 interface UpdateUserDetails {
@@ -19,7 +20,7 @@ const authService = {
       const response = await axiosInstance.post<AuthResponse>('/auth/signup/emailandpassword', { email, password });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -29,17 +30,29 @@ const authService = {
       const response = await axiosInstance.get<AuthResponse>(`/auth/verify?user=${userId}&token=${token}`);
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
+  // resend verification mail
+  resendVerificationEmail: async (email: string) => {
+    try {
+      const response = await axiosInstance.post(`/auth/resend-verification-email`, {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error
+    }
+  },
   // Login
   login: async (email: string, password: string): Promise<AuthResponse> => {
     try {
       const response = await axiosInstance.post<AuthResponse>('/auth/login', { email, password });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -53,7 +66,7 @@ const authService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -65,7 +78,7 @@ const authService = {
       });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -79,7 +92,7 @@ const authService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -89,7 +102,7 @@ const authService = {
       const response = await axiosInstance.post<AuthResponse>('/auth/forgot-password', { email });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -102,7 +115,7 @@ const authService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -112,7 +125,7 @@ const authService = {
       const response = await axiosInstance.post<AuthResponse>('/auth/signup/admin', { email, password });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -124,7 +137,7 @@ const authService = {
       });
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   }
 };

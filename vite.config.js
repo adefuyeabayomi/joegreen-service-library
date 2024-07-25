@@ -24,7 +24,8 @@ export default defineConfig({
         output: {
           globals: {
             axios: 'axios'
-          }
+          },
+          exports: "named"
         }
       }
     }

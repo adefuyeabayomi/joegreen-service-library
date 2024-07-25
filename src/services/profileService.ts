@@ -32,7 +32,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -49,7 +49,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -67,7 +67,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -90,7 +90,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -108,7 +108,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -125,7 +125,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 
@@ -143,7 +143,7 @@ const profileService = {
       );
       return response.data;
     } catch (error: any) {
-      throw error.response.data;
+      throw error;
     }
   },
 };

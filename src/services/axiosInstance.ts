@@ -13,7 +13,7 @@ function isLocalhost() {
 // Create an axios instance with the appropriate baseURL
 const axiosInstance = axios.create({
   baseURL: isLocalhost() ? localURL : productionURL,
-  timeout: 1000, // Set a timeout of 1 second
+  timeout: 20000, // Set a timeout of 20 seconds
   headers: {
     "Content-Type": "application/json" // Set the content type to JSON
   }
