@@ -1,45 +1,49 @@
 import axiosInstance from "./axiosInstance";
 
-interface Dish {
-    _id: string;
+export interface Dish {
+    _id?: string;
   name: string;
-  addons: string[];
+  addons: { name: string; price: number; }[];
   description: string;
-  published: boolean;
-  image: string; // Add this property
+  price: number;
+  published?: boolean;
+  image?: string; // Add this property
+  message?: string
 }
-
-interface DishResponse {
-  data: Dish;
+export interface QueryOptions {
+  [key: string]: string | number | boolean; // Adjust types based on your needs
 }
-
-interface DishListResponse {
-  data: Dish[];
-}
-
 export interface DishServiceResponseType {
   // Define properties based on API responses
   _id: string;
   name: string;
-  addons: string[];
+  addons: { name: string; price: number; }[];
   description: string;
+  price: number;
   published: boolean;
   image: string;
+  message?: string;
 }
 
 const dishService = {
-  // Get all dishes
-  getDishes: async (): Promise<DishListResponse> => {
+  getDishes: async (queryOptions: QueryOptions = {}): Promise<Dish[]> => {
     try {
-      const response = await axiosInstance.get('/dishes');
+      // Construct query string from queryOptions
+      const queryString = new URLSearchParams(queryOptions as Record<string, string>).toString();
+
+      // Construct full URL with query string
+      const url = queryString ? `/dishes?${queryString}` : '/dishes';
+      console.log({url})
+      const response = await axiosInstance.get(url);
       return response.data;
     } catch (error) {
+      console.error('Error fetching dishes:', error);
       throw error; // Pass the error to the caller
     }
   },
 
   // Get a dish by ID
-  getDishById: async (id: string): Promise<DishResponse> => {
+  getDishById: async (id: string): Promise<Dish> => {
     try {
       const response = await axiosInstance.get(`/dishes/${id}`);
       return response.data;
@@ -49,9 +53,10 @@ const dishService = {
   },
 
   // Create a new dish
-  createDish: async (dish: Dish): Promise<DishResponse> => {
+  createDish: async (dish: Dish,token:string): Promise<Dish> => {
     try {
-      const response = await axiosInstance.post('/dishes', dish);
+      const response = await axiosInstance.post('/dishes', dish,
+        { headers: { Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error; // Pass the error to the caller
@@ -59,9 +64,10 @@ const dishService = {
   },
 
   // Update an existing dish
-  updateDish: async (id: string, dish: Partial<Dish>): Promise<DishResponse> => {
+  updateDish: async (id: string, dish: Partial<Dish>,token:string): Promise<Dish> => {
     try {
-      const response = await axiosInstance.put(`/dishes/${id}`, dish);
+      const response = await axiosInstance.put(`/dishes/${id}`, dish,
+        { headers: { Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error; // Pass the error to the caller
@@ -69,13 +75,13 @@ const dishService = {
   },
 
   // Update dish image
-  updateDishImage: async (id: string, image: File): Promise<DishResponse> => {
+  updateDishImage: async (id: string, image: File,token:string): Promise<Dish> => {
     try {
       const formData = new FormData();
-      formData.append('image', image);
+      formData.append('files', image);
 
-      const response = await axiosInstance.patch(`/dishes/${id}/image`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const response = await axiosInstance.put(`/dishes/${id}/image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data',Authorization: `Bearer ${token}` }
       });
       return response.data;
     } catch (error) {
@@ -84,7 +90,7 @@ const dishService = {
   },
 
   // Get all categories
-  getAllCategory: async (): Promise<DishListResponse> => {
+  getAllCategory: async (): Promise<Dish[]> => {
     try {
       const response = await axiosInstance.get('/categories');
       return response.data;
@@ -94,7 +100,7 @@ const dishService = {
   },
 
   // Get a category by ID
-  getCategoryById: async (id: string): Promise<DishResponse> => {
+  getCategoryById: async (id: string): Promise<Dish> => {
     try {
       const response = await axiosInstance.get(`/categories/${id}`);
       return response.data;
@@ -104,9 +110,10 @@ const dishService = {
   },
 
   // Create a new category
-  createCategory: async (category: { name: string; description: string; published: boolean }): Promise<DishResponse> => {
+  createCategory: async (category: { name: string; description: string; published: boolean },token:string): Promise<Dish> => {
     try {
-      const response = await axiosInstance.post('/categories', category);
+      const response = await axiosInstance.post('/categories', category,
+        { headers: { Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error; // Pass the error to the caller
@@ -114,9 +121,10 @@ const dishService = {
   },
 
   // Update an existing category
-  updateCategory: async (id: string, category: { name?: string; description?: string; published?: boolean }): Promise<DishResponse> => {
+  updateCategory: async (id: string, category: { name?: string; description?: string; published?: boolean },token:string): Promise<Dish> => {
     try {
-      const response = await axiosInstance.put(`/categories/${id}`, category);
+      const response = await axiosInstance.put(`/categories/${id}`, category,
+        { headers: { Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error; // Pass the error to the caller
@@ -124,9 +132,11 @@ const dishService = {
   },
 
   // Delete a dish or category
-  delete: async (id: string, type: 'dishes' | 'categories'): Promise<void> => {
+  delete: async (id: string, type: 'dishes' | 'categories',token:string): Promise<Dish> => {
     try {
-      await axiosInstance.delete(`/${type}/${id}`);
+      let response = await axiosInstance.delete(`/${type}/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } });
+      return response.data
     } catch (error) {
       throw error; // Pass the error to the caller
     }
