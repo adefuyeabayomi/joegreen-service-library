@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance';
 
 // Define the interface for the blog response type
-interface Blog {
+export interface BlogType {
   _id?: string;
   title: string;
   highlightParagraph: string;
@@ -9,13 +9,13 @@ interface Blog {
   link: string;
   image?: string;
   published?: boolean;
+  message?:string
 }
 
-class BlogService {
-  // Create a new blog post
-  static async createBlogPost(blogData: Blog) {
+  const createBlogPost = async (blogData: FormData,token:string): Promise<BlogType> => {
     try {
-      const response = await axiosInstance.post('/blogs', blogData);
+      const response = await axiosInstance.post('/blogs', blogData,
+        { headers: {'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ class BlogService {
   }
 
   // Get all blog posts
-  static async getAllBlogPosts() {
+  const getAllBlogPosts = async (): Promise<BlogType[]> => {
     try {
       const response = await axiosInstance.get('/blogs');
       return response.data;
@@ -33,7 +33,7 @@ class BlogService {
   }
 
   // Get a blog post by ID
-  static async getBlogPostById(id: string) {
+  const getBlogPostById = async (id: string): Promise<BlogType> =>{
     try {
       const response = await axiosInstance.get(`/blogs/${id}`);
       return response.data;
@@ -43,9 +43,10 @@ class BlogService {
   }
 
   // Update a blog post by ID
-  static async updateBlogPost(id: string, blogData: Blog) {
+  const updateBlogPost = async (id: string, blogData: FormData | object,token:string): Promise<BlogType> => {
     try {
-      const response = await axiosInstance.put(`/blogs/${id}`, blogData);
+      const response = await axiosInstance.put(`/blogs/${id}`, blogData,
+        { headers: {'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error;
@@ -53,14 +54,21 @@ class BlogService {
   }
 
   // Delete a blog post by ID
-  static async deleteBlogPost(id: string) {
+  const deleteBlogPost= async (id: string,token:string): Promise<BlogType> => {
     try {
-      const response = await axiosInstance.delete(`/blogs/${id}`);
+      const response = await axiosInstance.delete(`/blogs/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } });
       return response.data;
     } catch (error) {
       throw error;
     }
   }
-}
 
+const BlogService = {
+  getAllBlogPosts,
+  getBlogPostById,
+  createBlogPost,
+  updateBlogPost,
+  deleteBlogPost
+}
 export default BlogService;

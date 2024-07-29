@@ -3,16 +3,18 @@ import axiosInstance from "./axiosInstance";
 export interface Dish {
     _id?: string;
   name: string;
-  addons: { name: string; price: number; }[];
+  addons: { name: string; price: number; quantity?:number, _id:string}[];
   description: string;
   price: number;
   published?: boolean;
+  category?:string;
   image?: string; // Add this property
-  message?: string
+  message?: string;
 }
 export interface QueryOptions {
   [key: string]: string | number | boolean; // Adjust types based on your needs
 }
+
 export interface DishServiceResponseType {
   // Define properties based on API responses
   _id: string;
@@ -20,6 +22,7 @@ export interface DishServiceResponseType {
   addons: { name: string; price: number; }[];
   description: string;
   price: number;
+  category?:string;
   published: boolean;
   image: string;
   message?: string;
@@ -30,7 +33,6 @@ const dishService = {
     try {
       // Construct query string from queryOptions
       const queryString = new URLSearchParams(queryOptions as Record<string, string>).toString();
-
       // Construct full URL with query string
       const url = queryString ? `/dishes?${queryString}` : '/dishes';
       console.log({url})
@@ -134,7 +136,7 @@ const dishService = {
   // Delete a dish or category
   delete: async (id: string, type: 'dishes' | 'categories',token:string): Promise<Dish> => {
     try {
-      let response = await axiosInstance.delete(`/${type}/${id}`,
+      let response = await axiosInstance.delete(`/delete/${type}/${id}`,
         { headers: { Authorization: `Bearer ${token}` } });
       return response.data
     } catch (error) {
