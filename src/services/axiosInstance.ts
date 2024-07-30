@@ -11,6 +11,7 @@ function backendUrl() {
   return hostname === "localhost" || hostname === "127.0.0.1" ? localURL : productionURL;
 }
 
+console.log(backendUrl())
 // Create an axios instance with the appropriate baseURL
 const axiosInstance = axios.create({
   baseURL: backendUrl(),
