@@ -18,11 +18,14 @@ export interface CartItem {
 export interface Order {
   cartItems: CartItem[];
   phoneNumber: string;
+  email?: string;
   deliveryInfo: string;
   narration: string;
   transactionRef?: string;
   paymentRef?: string;
   paymentStatus?: string;
+  createdAt?:string;
+  updatedAt?:string;
   fufilled?:String;
   cancelled?: boolean;
   user?: string;

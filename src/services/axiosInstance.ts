@@ -5,14 +5,15 @@ const productionURL = "https://joegreen-express-server.onrender.com";
 const localURL = "http://localhost:8080";
 
 // Function to check if the application is running locally
-function isLocalhost() {
+function backendUrl() {
+  console.log({LOCATION: window.location.hostname})
   const hostname = window.location.hostname;
-  return hostname === "localhost" || hostname === "127.0.0.1";
+  return hostname === "localhost" || hostname === "127.0.0.1" ? localURL : productionURL;
 }
 
 // Create an axios instance with the appropriate baseURL
 const axiosInstance = axios.create({
-  baseURL: isLocalhost() ? localURL : productionURL,
+  baseURL: backendUrl(),
   timeout: 20000, // Set a timeout of 20 seconds
   headers: {
     "Content-Type": "application/json" // Set the content type to JSON
