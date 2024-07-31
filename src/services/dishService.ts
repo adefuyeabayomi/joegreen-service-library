@@ -1,9 +1,10 @@
 import axiosInstance from "./axiosInstance";
+export interface Addons { name: string; price: number; quantity?:number, _id:string}
 
 export interface Dish {
     _id?: string;
   name: string;
-  addons: { name: string; price: number; quantity?:number, _id:string}[];
+  addons: Addons[];
   description: string;
   price: number;
   published?: boolean;
@@ -19,7 +20,7 @@ export interface DishServiceResponseType {
   // Define properties based on API responses
   _id: string;
   name: string;
-  addons: { name: string; price: number; }[];
+  addons: Addons[];
   description: string;
   price: number;
   category?:string;

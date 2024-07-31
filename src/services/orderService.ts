@@ -15,6 +15,7 @@ export interface CartItem {
     message?: string; // Optional property for additional message
     quantity: number;
   }
+
 export interface Order {
   cartItems: CartItem[];
   phoneNumber: string;
@@ -26,13 +27,18 @@ export interface Order {
   paymentStatus?: string;
   createdAt?:string;
   updatedAt?:string;
-  fufilled?:String;
+  fulfilled?:boolean;
   cancelled?: boolean;
   user?: string;
   _id?:string
 }
 
-const fetchOrders = async (token: string, params?: { userId?: string; paymentStatus?: string }): Promise<Order[]> => {
+export interface QueryOptions {
+  [key: string]: string | number | boolean; // Adjust types based on your needs
+}
+
+
+const fetchOrders = async (token: string, params?: { userId?: string; paymentStatus?: string, fulfilled?: boolean, date?: string }): Promise<Order[]> => {
     try {
         const response = await axiosInstance.get('/order', {
             headers: {
