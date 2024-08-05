@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
 // Define your production and local URLs
 const productionURL = "https://joegreen-express-server.onrender.com";
@@ -15,10 +16,11 @@ console.log(backendUrl())
 // Create an axios instance with the appropriate baseURL
 const axiosInstance = axios.create({
   baseURL: backendUrl(),
-  timeout: 20000, // Set a timeout of 20 seconds
+  timeout: 30000, // Set a timeout of 30 seconds
   headers: {
     "Content-Type": "application/json" // Set the content type to JSON
   }
 });
+axiosRetry(axiosInstance,{retries: 3})
 
 export default axiosInstance;
